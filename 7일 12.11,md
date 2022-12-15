@@ -129,3 +129,138 @@ localStorage에 이미 뭐가 있을 때는 array를 수정해야합니다.
 그 페이지 방문시 localStorage에 있던 상품명들을 꺼내서 전부 진열해서 보여주면 됩니다.
 
 디자인 신경쓸 필요없이 상품명들만 전부 잘 보이면 성공입니다.
+
+# 자바스크립트-2  장바구니 기능과 localStorage 숙제(**L3-14)**
+
+> 숙제1. 구매버튼누르면 상품명을 localStorage에 저장
+> 
+
+그래서 일단 카드레이아웃 생성하는 코드에 <button class="buy">구매</button> 이거 추가해놨습니다.
+
+이 버튼 누르면 버튼 위에 있던 상품제목을 가져와서 array형식으로 저장해봅시다.
+
+```jsx
+products.forEach(function(a, i){
+  (생략)
+  <h5>${products[i].title}</h5>
+  <p>가격 : ${products[i].price}</p><button class="buy">구매</button>
+});
+
+$('.buy').click(function(){
+  var title = $(e.target).siblings('h5').text();
+  console.log(title)
+});
+```
+
+그래서 구매버튼에 이벤트리스너를 붙여봤습니다.
+
+누르면 일단 위에 있는 가격도 출력해보라고 코드짜봤습니다.
+
+jQuery함수인 .siblings() 는 내 형제요소를 찾아줍니다. (형제요소는 나랑 나란히 배치된 html 태그들)
+
+쌩자바스크립트는 형제요소 찾기 매우 귀찮습니다.
+
+쌩자바스크립트는 e.target.previousElementSibling.previousElementSibling 이러면 나올듯요
+
+```jsx
+(생략)
+
+$('.buy').click(function(){
+  var title = $(e.target).siblings('h5').text();
+  localStorage.setItem('cart', JSON.stringify([title]))
+});
+```
+
+로컬스토리지에 저장까지 해봤습니다.
+
+근데 문제는 구매버튼 누를 때 마다 array가 새로 생성만 되고 있고 추가는 안되는군요.
+
+그건 "이미 뭐가 저장되어있으면 새로추가하지말고 있는거 수정해주세요" 라고 코드짜면 될듯요
+
+```jsx
+(생략)
+
+$('.buy').click(function(){
+  var title = $(e.target).siblings('h5').text();
+  if (localStorage.getItem('cart') != null ){
+    이미있던거 수정해주셈
+  } else {
+    localStorage.setItem('cart', JSON.stringify([title]))
+  }
+});
+```
+
+그래서 이렇게 해봤습니다.
+
+'cart' 항목이 없을 때 getItem() 을 사용하면 null이 출력되어서 저렇게 적어봤습니다.
+
+**Q. 뭐가 없으면 null이 나오는지 어떻게 알죠?**
+
+A. 생각해서 안나오는건 검색해보거나 실험해보면 됩니다.
+
+그럼 이제 "있던거 수정해주셈" 이건 어떻게 코드짭니까
+
+***귀찮아도 직접 해봐야**
+
+localStorage에 있던걸 직접 수정하는 문법은 없다고 했습니다.
+
+그래서 꺼내서 수정하고 다시 집어넣으면 됩니다.
+
+```jsx
+(생략)
+
+$('.buy').click(function(){
+  var title = $(e.target).siblings('h5').text();
+  if (localStorage.getItem('cart') != null ){
+    var 꺼낸거 = JSON.parse(localStorage.cart);
+    꺼낸거.push(title);
+    localStorage.setItem('cart', JSON.stringify(꺼낸거));
+  } else {
+    localStorage.setItem('cart', JSON.stringify([title]))
+  }
+});
+```
+
+꺼내고
+
+상품명 뒤에 하나 추가하고
+
+다시집어넣어달라고 코드짰습니다.
+
+따라치기만 했으면 코드 지우고 1주 후에 직접 다시 만들어봅시다.
+
+코드따라적기만 하는건 손가락 운동일 뿐입니다 손가락 힘이 쎄짐
+
+[collapse]
+
+> 숙제2. cart.html 에서 로컬스토리지에 있던 상품들 보여주기
+> 
+
+이건 그냥 html 파일 만들고
+
+```
+<div>장바구니 페이지</div>
+
+<script>
+  localStorage에 있던 상품들 꺼내주세요
+  꺼낸 상품 갯수만큼 <p>상품명</p>을 위에 생성해주세요
+</script>
+```
+
+라고 코드짜면 끝인데
+
+html 생성하는건 많이 해봤으니 알아서해보도록 합시다.
+
+(응용)
+
+**1. 같은 상품은 중복으로 추가되지 않게하고 싶으면?**
+
+상품을 추가하기 전에 상품명이 이미 localStorage에 있는지 검사하면 되겠군요
+
+**2. 아니면 같은 상품 구매 누르면 상품 갯수가 올라가게?**
+
+상품명을 localStorage에 저장시 갯수도 저장하면 됩니다.
+
+[ '상품명a 2개', '상품명b 4개' ... ] 이렇게 저장해도 되겠지만 여러 정보를 한 곳에 넣고 싶으면 array/object 쓰면 됩니다.
+
+[ {title : '상품명a', num : 2}, {title : '상품명b', num : 4}  ... ] 이렇게 저장해놓으면 편리할듯요
