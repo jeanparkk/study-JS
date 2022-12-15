@@ -113,7 +113,7 @@ JSON -> array/object 변환하고 싶으면 **JSON.parse()**
 
 1. 카드하단 구매버튼추가하고 그거 누르면 누른 상품의 이름을 localStorage에 저장하기
 
-![https://codingapple.com/wp-content/uploads/2022/03/cart1.png](https://codingapple.com/wp-content/uploads/2022/03/cart1.png)
+
 
 ▲ 저장하는 형태는 자유지만 이렇게 array 안에 전부 저장해보는게 어떨까요.
 
